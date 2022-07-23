@@ -3,7 +3,7 @@ package com.company.model;
 import java.util.Arrays;
 
 public class Board {
-    public static final int DEFAULT_SIZE = 3;
+    private static final int DEFAULT_SIZE = 3;
     public static final char EMPTY = ' ';
 
     private final char[][] table;
@@ -35,7 +35,7 @@ public class Board {
     private void verifyInput(char token, int row, int column) {
         if (!isCorrectCoord(row, column)) {
             String message = "place (x=%d, y=%d) is incorrect, must be in the range 0...%s  ";
-            throw new GameException(message.formatted(column, row, DEFAULT_SIZE - 1));
+            throw new GameException(message.formatted(column, row, getSize()));
         }
 
         if (!isFreeCoord(row, column)) {
@@ -58,7 +58,7 @@ public class Board {
     }
 
     public boolean isCorrectCoord(int row, int column) {
-        return (row >= 0 && row < DEFAULT_SIZE) && (column >= 0 && column < DEFAULT_SIZE);
+        return (row >= 0 && row < getSize()) && (column >= 0 && column < getSize());
     }
 
 
@@ -78,19 +78,19 @@ public class Board {
     }
 
     public char[][] getAllStraightLines() {
-        char[][] out = new char[2 * DEFAULT_SIZE + 2][Board.DEFAULT_SIZE];
+        char[][] out = new char[2 * getSize() + 2][getSize()];
         int count = 0;
 
-        for (int i = 0; i < DEFAULT_SIZE; i++)  {
-            for (int j = 0; j < DEFAULT_SIZE; j++) {
+        for (int i = 0; i < getSize(); i++)  {
+            for (int j = 0; j < getSize(); j++) {
                 out[count][j] = table[i][j];
                 out[count + 1][j] = table[j][i];
             }
             count += 2;
         }
-        for (int i = 0; i < DEFAULT_SIZE; i++) {
+        for (int i = 0; i < getSize(); i++) {
             out[count][i] = table[i][i];
-            out[count + 1][i] = table[i][DEFAULT_SIZE - i - 1];
+            out[count + 1][i] = table[i][getSize() - i - 1];
         }
 
         return out;
