@@ -1,4 +1,4 @@
-package com.company;
+package com.company.model;
 
 public class GameException extends RuntimeException {
     public GameException(String message) {

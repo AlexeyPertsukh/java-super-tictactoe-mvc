@@ -1,36 +1,53 @@
-package com.company;
+package com.company.controller;
+
+import com.company.model.Player;
+import com.company.model.Board;
+import com.company.model.Point;
+import com.company.model.GameException;
+
+
+import com.company.view.MyPrinter;
+import com.company.view.MyReader;
+
+import java.util.InputMismatchException;
 
 public class Game {
 
     private final Player player1 = new Player("X");
     private final Player player2 = new Player("0");
     private Player currentPlayer = player1;
-    Field field = new Field();
-    Iview view;
+    Board board = new Board();
+    MyPrinter printer;
+    MyReader reader;
 
-    public Game(Iview view) {
-        this.view = view;
+    public Game(MyPrinter printer, MyReader reader) {
+        this.printer = printer;
+        this.reader = reader;
     }
 
     public void go() {
         while (!isGameOver()) {
-            view.showField(field);
-            view.showPlayerMessage("Current player: %s".formatted(currentPlayer.getName()));
+            showBeforeGameStep();
 
             var point = getPoint(currentPlayer);
-            var result = inputToField(point);
+            var result = inputToBoard(point);
             if (result) {
                 currentPlayer = changePlayer();
             }
         }
 
-        view.showField(field);
+        printer.showBoard(board);
 
         if (isWin()) {
             winAction();
         } else {
             drawAction();
         }
+    }
+
+    private void showBeforeGameStep() {
+        printer.showBoard(board);
+        printer.showLn("Current player: %s".formatted(currentPlayer.getName()));
     }
 
     private Player changePlayer() {
@@ -41,35 +58,57 @@ public class Game {
     }
 
     private Point getPoint(Player player) {
-        return view.getPoint(player.getToken(), "move to x : ", "move to y : ");
+        var column = readIntWithLabel(board.getSize(), "move to x : ");
+        var row = readIntWithLabel(board.getSize(), "move to y : ");
+
+        return new Point (player.getToken(), row, column);
     }
 
-    private boolean inputToField(Point point) {
+    private int readIntWithLabel(int max, String message) {
+        int num;
+        while (true) {
+            printer.show(message);
+            try{
+                num = reader.readInt();
+                if(num >= 0 || num < max) {
+                    return num;
+                }
+
+            } catch (InputMismatchException e) {
+                printer.showLn("invalid input, please try again");
+            }
+
+        }
+
+
+    }
+
+    private boolean inputToBoard(Point point) {
         try {
-            field.input(point);
+            board.input(point);
             return true;
         } catch (GameException e) {
             String message = "!!! " + e.getMessage();
-            view.showMessage(message);
+            printer.showLn(message);
             return false;
         }
     }
 
     public boolean isGameOver() {
-        return field.isFull() || isWin();
+        return board.isFull() || isWin();
     }
 
     public boolean isWin() {
-        return getWinTokenOrEmpty() != Field.EMPTY;
+        return getWinTokenOrEmpty() != Board.EMPTY;
     }
 
     private void winAction() {
         String message = "Game over, WINNER IS: %s".formatted(getWinPlayer().getName());
-        view.showMessage(message);
+        printer.showLn(message);
     }
 
     private void drawAction() {
-        view.showMessage("The game ended in a draw...");
+        printer.showLn("The game ended in a draw...");
     }
 
 
@@ -83,7 +122,7 @@ public class Game {
 
     public Player getWinPlayer() {
         char token = getWinTokenOrEmpty();
-        if (token == Field.EMPTY) {
+        if (token == Board.EMPTY) {
             throw new GameException("you want to get who won, but there is no winner yet");
         }
         return getPlayerByToken(token);
@@ -93,23 +132,23 @@ public class Game {
     //массив всех возможных линий(верт., гориз., диаг.)
     //медленней, чем обычная проверка, но меньше кода в контроллере и красивее
     private char getWinTokenOrEmpty() {
-        var array = field.getAllStraightLines();
+        var array = board.getAllStraightLines();
         char win;
         for (var line : array) {
             win = line[0];
 
             for (var c : line) {
-                if(c == Field.EMPTY || c != win) {
-                    win = Field.EMPTY;
+                if(c == Board.EMPTY || c != win) {
+                    win = Board.EMPTY;
                     break;
                 }
             }
 
-            if(win != Field.EMPTY) {
+            if(win != Board.EMPTY) {
                 return win;
             }
         }
-        return Field.EMPTY;
+        return Board.EMPTY;
     }
 
 }
