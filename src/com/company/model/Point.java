@@ -1,4 +1,4 @@
 package com.company.model;
 
-public record Point(char token, int row, int column) {
+public record Point(Figure figure, int row, int column) {
 }

@@ -1,9 +1,6 @@
 package com.company.controller;
 
-import com.company.model.Player;
-import com.company.model.Board;
-import com.company.model.Point;
-import com.company.model.GameException;
+import com.company.model.*;
 
 
 import com.company.view.MyPrinter;
@@ -13,8 +10,8 @@ import java.util.InputMismatchException;
 
 public class Game {
 
-    private final Player player1 = new Player("X");
-    private final Player player2 = new Player("0");
+    private final Player player1 = new Player(Figure.X);
+    private final Player player2 = new Player(Figure.ZERO);
     private Player currentPlayer = player1;
     Board board = new Board();
     MyPrinter printer;
@@ -61,7 +58,7 @@ public class Game {
         var column = readIntWithLabel(board.getSize(), "move to x : ");
         var row = readIntWithLabel(board.getSize(), "move to y : ");
 
-        return new Point (player.getToken(), row, column);
+        return new Point (player.getFigure(), row, column);
     }
 
     private int readIntWithLabel(int max, String message) {
@@ -99,7 +96,7 @@ public class Game {
     }
 
     public boolean isWin() {
-        return getWinTokenOrEmpty() != Board.EMPTY;
+        return !getWinTokenOrEmpty().isNull();
     }
 
     private void winAction() {
@@ -112,8 +109,8 @@ public class Game {
     }
 
 
-    private Player getPlayerByToken(char token) {
-        var player = (player1.getToken() == token) ? player1 : (player2.getToken() == token) ? player2 : null;
+    private Player getPlayerByFigure(Figure figure) {
+        var player = (player1.getFigure() == figure) ? player1 : (player2.getFigure() == figure) ? player2 : null;
         if (player == null) {
             throw new GameException("unknown player's token");
         }
@@ -121,34 +118,34 @@ public class Game {
     }
 
     public Player getWinPlayer() {
-        char token = getWinTokenOrEmpty();
-        if (token == Board.EMPTY) {
+        var figure = getWinTokenOrEmpty();
+        if (figure.isNull()) {
             throw new GameException("you want to get who won, but there is no winner yet");
         }
-        return getPlayerByToken(token);
+        return getPlayerByFigure(figure);
     }
 
     //хитрый метод нахождения выигравшего- получаем из field
     //массив всех возможных линий(верт., гориз., диаг.)
     //медленней, чем обычная проверка, но меньше кода в контроллере и красивее
-    private char getWinTokenOrEmpty() {
+    private Figure getWinTokenOrEmpty() {
         var array = board.getAllStraightLines();
-        char win;
+        Figure win;
         for (var line : array) {
             win = line[0];
 
-            for (var c : line) {
-                if(c == Board.EMPTY || c != win) {
-                    win = Board.EMPTY;
+            for (var figure : line) {
+                if(figure.isNull() || figure != win) {
+                    win = Figure.NULL;
                     break;
                 }
             }
 
-            if(win != Board.EMPTY) {
+            if(!win.isNull()) {
                 return win;
             }
         }
-        return Board.EMPTY;
+        return Figure.NULL;
     }
 
 }

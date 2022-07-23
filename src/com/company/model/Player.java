@@ -2,22 +2,22 @@ package com.company.model;
 
 public class Player {
     private final String name;
-    private final char token;
+    private final Figure figure;
 
-    public Player(String name, char token) {
+    public Player(String name, Figure figure) {
         this.name = name;
-        this.token = token;
+        this.figure = figure;
     }
 
-    public Player(String name) {
-        this(name, name.charAt(0));
+    public Player(Figure figure) {
+        this(String.valueOf(figure.getSymbol()), figure);
     }
 
     public String getName() {
         return name;
     }
 
-    public char getToken() {
-        return token;
+    public Figure getFigure() {
+        return figure;
     }
 }

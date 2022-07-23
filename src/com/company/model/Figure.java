@@ -1,7 +1,7 @@
 package com.company.model;
 
 public enum Figure {
-    EMPTY(' '),
+    NULL(' '),
     X('X'),
     ZERO('0');
 
@@ -11,8 +11,8 @@ public enum Figure {
         this.symbol = symbol;
     }
 
-    public boolean isEmpty() {
-        return this == EMPTY;
+    public boolean isNull() {
+        return this == NULL;
     }
 
     public char getSymbol() {

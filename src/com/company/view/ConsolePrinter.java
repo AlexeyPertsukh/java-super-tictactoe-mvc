@@ -8,14 +8,14 @@ public class ConsolePrinter implements MyPrinter {
     public void showBoard(Board board) {
         final var template = " %c ";
         final var sep = '|';
-        var arr = board.toCharArray();
+        var arr = board.toFigureArray();
 
         System.out.println();
 
         for (int i = 0; i < arr.length; i++) {
             var line = arr[i];
             for (int j = 0; j < line.length; j++) {
-                System.out.print(template.formatted(line[j]));
+                System.out.print(template.formatted(line[j].getSymbol()));
                 if (j < line.length - 1) {
                     System.out.print(sep);
                 }
