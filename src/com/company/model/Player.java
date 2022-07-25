@@ -10,7 +10,7 @@ public class Player {
     }
 
     public Player(Figure figure) {
-        this(String.valueOf(figure.getSymbol()), figure);
+        this(String.valueOf(figure.getChar()), figure);
     }
 
     public String getName() {

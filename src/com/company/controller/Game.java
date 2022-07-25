@@ -10,19 +10,22 @@ import java.util.InputMismatchException;
 
 public class Game {
 
-    private final Player player1 = new Player(Figure.X);
-    private final Player player2 = new Player(Figure.ZERO);
-    private Player currentPlayer = player1;
-    Board board = new Board();
-    MyPrinter printer;
-    MyReader reader;
+    private final Player[] players;
+    private final Board board;
+    private Player currentPlayer;
+    private final MyPrinter printer;
+    private final MyReader reader;
 
-    public Game(MyPrinter printer, MyReader reader) {
+    public Game(Board board, Player[] players, MyPrinter printer, MyReader reader) {
+        this.board = board;
+        this.players = players;
         this.printer = printer;
         this.reader = reader;
     }
 
     public void go() {
+        currentPlayer = changePlayer();
+
         while (!isGameOver()) {
             showBeforeGameStep();
 
@@ -49,38 +52,41 @@ public class Game {
 
     private Player changePlayer() {
         if (currentPlayer == null) {
-            return player1;
+            return players[0];
         }
-        return (currentPlayer == player1) ? player2 : player1;
+
+        for (int i = 0; i < players.length; i++) {
+            if (currentPlayer == players[i]) {
+                return (i < players.length - 1) ? players[i + 1] : players[0];
+            }
+        }
+        throw new GameException("unknown player");
     }
 
-    private Point getPoint(Player player) {
-        var column = readIntWithLabel(board.getSize(), "move to x : ");
-        var row = readIntWithLabel(board.getSize(), "move to y : ");
+    private PointStringIndex getPoint(Player player) {
+        printer.show("input cell : ");
+        var index = reader.readString();
 
-        return new Point (player.getFigure(), row, column);
+        return new PointStringIndex(player.getFigure(), index);
     }
 
     private int readIntWithLabel(int max, String message) {
         int num;
         while (true) {
             printer.show(message);
-            try{
+            try {
                 num = reader.readInt();
-                if(num >= 0 || num < max) {
+                if (num >= 0 || num < max) {
                     return num;
                 }
 
             } catch (InputMismatchException e) {
                 printer.showLn("invalid input, please try again");
             }
-
         }
-
-
     }
 
-    private boolean inputToBoard(Point point) {
+    private boolean inputToBoard(PointStringIndex point) {
         try {
             board.input(point);
             return true;
@@ -96,7 +102,8 @@ public class Game {
     }
 
     public boolean isWin() {
-        return !getWinTokenOrEmpty().isNull();
+        var win = new WinController();
+        return win.getWinOrEmpty(board) != Figure.NULL;
     }
 
     private void winAction() {
@@ -110,42 +117,22 @@ public class Game {
 
 
     private Player getPlayerByFigure(Figure figure) {
-        var player = (player1.getFigure() == figure) ? player1 : (player2.getFigure() == figure) ? player2 : null;
-        if (player == null) {
-            throw new GameException("unknown player's token");
+        for (Player player : players) {
+            if (player.getFigure() == figure) {
+                return player;
+            }
         }
-        return player;
+        throw new GameException("unknown player's figure");
     }
 
     public Player getWinPlayer() {
-        var figure = getWinTokenOrEmpty();
+        var win = new WinController();
+        var figure = win.getWinOrEmpty(board);
         if (figure.isNull()) {
             throw new GameException("you want to get who won, but there is no winner yet");
         }
         return getPlayerByFigure(figure);
     }
 
-    //хитрый метод нахождения выигравшего- получаем из field
-    //массив всех возможных линий(верт., гориз., диаг.)
-    //медленней, чем обычная проверка, но меньше кода в контроллере и красивее
-    private Figure getWinTokenOrEmpty() {
-        var array = board.getAllStraightLines();
-        Figure win;
-        for (var line : array) {
-            win = line[0];
-
-            for (var figure : line) {
-                if(figure.isNull() || figure != win) {
-                    win = Figure.NULL;
-                    break;
-                }
-            }
-
-            if(!win.isNull()) {
-                return win;
-            }
-        }
-        return Figure.NULL;
-    }
 
 }

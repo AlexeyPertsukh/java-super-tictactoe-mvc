@@ -3,7 +3,8 @@ package com.company.model;
 public enum Figure {
     NULL(' '),
     X('X'),
-    ZERO('0');
+    ZERO('0'),
+    SHARP('#');
 
     private final char symbol;
 
@@ -15,7 +16,7 @@ public enum Figure {
         return this == NULL;
     }
 
-    public char getSymbol() {
+    public char getChar() {
         return symbol;
     }
 }

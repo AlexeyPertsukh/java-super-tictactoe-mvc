@@ -11,5 +11,11 @@ public class ConsoleReader implements MyReader {
         return sc.nextInt();
     }
 
+    @Override
+    public String readString() {
+        Scanner sc = new Scanner(System.in);
+        return sc.next();
+    }
+
 }
 
