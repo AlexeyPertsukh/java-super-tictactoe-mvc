@@ -22,7 +22,7 @@ public class ConsolePrinter implements MyPrinter {
 
     public void showBoard(Board board, String letterColor, String figureColor, String lineColor) {
         final var tplFigure = "  %s  ";
-        final var tplNull = "%s    ";
+        final var tplNull = "%s   ";
         final var sep = '|';
 
         System.out.println();

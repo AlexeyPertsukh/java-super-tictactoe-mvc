@@ -1,13 +1,16 @@
 package com.company.model;
 
 import java.util.Arrays;
+import java.util.Locale;
 
 public class Board {
     private static final int DEFAULT_SIZE = 3;
+    private static final int MAX_SIZE = 'z' - 'a';
 
     private final Figure[][] table;
 
     public Board(int size) {
+        verify(size);
         table = new Figure[size][size];
         for (Figure[] arr : table) {
             Arrays.fill(arr, Figure.NULL);
@@ -17,6 +20,14 @@ public class Board {
     public Board() {
         this(DEFAULT_SIZE);
     }
+
+    private void verify(int size) {
+        if(size > MAX_SIZE) {
+            String message = "board size too big: %s, may be < %s";
+            throw new GameException(message.formatted(size, MAX_SIZE));
+        }
+    }
+
 
     public int size() {
         return table.length;
@@ -91,14 +102,33 @@ public class Board {
     }
 
     private int[] toIndexes(String string) {
-        int num = (int) string.charAt(0) - 'a';
-        var row = num / size();
-        var column = num % size();
+        string = string.toLowerCase();
+        verifyToIndex(string);
+        var row = string.charAt(0) - 'a';
+        var column = string.charAt(1) - 'a';
         return new int[] {row, column};
     }
 
-    private String indexAsString(int row, int column) {
-        return String.valueOf((char) ('a' + row * size() + column));
+    private static void verifyToIndex(String string) {
+        if(string.length() != 2) {
+            String message = "illegal length string index for input to board: %s, must be 2";
+            throw new GameException(message.formatted(string.length()));
+        }
+        for (int i = 0; i < string.length(); i++) {
+            if(!isLowerCase(string.charAt(i))) {
+                String message = "illegal string index: %s";
+                throw new GameException(message.formatted(string));
+            }
+        }
+
+    }
+
+    private static String indexAsString(int row, int column) {
+        return "%c%c".formatted('a' + row, 'a' + column);
+    }
+
+    private static boolean isLowerCase(char ch) {
+        return ch >= 'a' && ch <= 'z';
     }
 
 }

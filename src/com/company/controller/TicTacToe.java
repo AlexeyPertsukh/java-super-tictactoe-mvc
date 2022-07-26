@@ -9,7 +9,11 @@ import com.company.view.ConsoleReader;
 public class TicTacToe {
     public static void main(String[] args) {
         Player[] players = new Player[] {new Player(Figure.X), new Player(Figure.ZERO), new Player(Figure.SHARP)};
-        var game = new Game(new Board(5), players, new ConsolePrinter(), new ConsoleReader());
+        Board board = new Board(6);
+        ConsolePrinter printer =  new ConsolePrinter();
+        ConsoleReader reader = new ConsoleReader();
+
+        var game = new Game(board, players, printer, reader);
         game.go();
     }
 }

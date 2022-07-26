@@ -36,9 +36,13 @@ public class WinController {
 
         for (int direction = 0; direction < 2; direction++) {
             for (int i = 0; i < LINE_LNG; i++) {
-                var win = (direction == 0) ? board.get(i + stRow, stColumn) : board.get(stRow, i + stColumn);
+                var win = (direction == 0)
+                        ? board.get(i + stRow, stColumn)
+                        : board.get(stRow, i + stColumn);
                 for (int j = 0; j < LINE_LNG; j++) {
-                    Figure cur = (direction == 0) ? board.get(i + stRow, j + stRow) : board.get(j + stRow, i + stColumn);
+                    Figure cur = (direction == 0)
+                            ? board.get(i + stRow, j + stRow)
+                            : board.get(j + stRow, i + stColumn);
                     if (cur.isNull() || cur != win) {
                         win = Figure.NULL;
                         break;
@@ -58,7 +62,9 @@ public class WinController {
         for (int direction = 0; direction < 2; direction++) {
             var win = (direction == 0) ? board.get(startRow, startColumn) : board.get(endRow - 1, startColumn);
             for (int i = 0; i < LINE_LNG; i++) {
-                var cur = (direction == 0) ? board.get(startRow + i, startColumn + i) : board.get(endRow - i - 1, startColumn + i);
+                var cur = (direction == 0)
+                        ? board.get(startRow + i, startColumn + i)
+                        : board.get(endRow - i - 1, startColumn + i);
                 if (cur.isNull() || cur != win) {
                     win = Figure.NULL;
                     break;
