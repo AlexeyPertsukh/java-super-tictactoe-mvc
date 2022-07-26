@@ -41,7 +41,7 @@ public class WinController {
                         : board.get(stRow, i + stColumn);
                 for (int j = 0; j < LINE_LNG; j++) {
                     Figure cur = (direction == 0)
-                            ? board.get(i + stRow, j + stRow)
+                            ? board.get(i + stRow, j + stColumn)
                             : board.get(j + stRow, i + stColumn);
                     if (cur.isNull() || cur != win) {
                         win = Figure.NULL;

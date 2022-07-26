@@ -38,13 +38,9 @@ public class Board {
         table[row][column] = figure;
     }
 
-    public void input(Point point) {
-        input(point.figure(), point.row(), point.column());
-    }
-
     public void input(PointStringIndex point) {
-        var coord = toIndexes(point.stringIndex());
-        input(point.figure(), coord[0], coord[1]);
+        var indexes = toIndexes(point.stringIndex());
+        input(point.figure(), indexes[0], indexes[1]);
     }
 
     private void verifyInput(Figure figure, int row, int column) {

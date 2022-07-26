@@ -1,6 +1,10 @@
 package com.company.controller;
 
-import com.company.model.*;
+import com.company.model.Player;
+import com.company.model.Board;
+import com.company.model.PointStringIndex;
+import com.company.model.GameException;
+import com.company.model.Figure;
 
 
 import com.company.view.MyPrinter;
