@@ -2,7 +2,7 @@ package com.company.model;
 
 public enum Figure {
     NULL(' '),
-    ZERRO('X'),
+    X('X'),
     ZERO('0'),
     SHARP('#');
 

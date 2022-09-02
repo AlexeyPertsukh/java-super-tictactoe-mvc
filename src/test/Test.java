@@ -1,4 +1,4 @@
-package com.company.test;
+package test;
 
 import com.company.controller.WinController;
 import com.company.model.Board;
@@ -29,12 +29,11 @@ class Test {
 
     @org.junit.jupiter.api.Test
     void testBoardWinHorizontal() {
-        var figure = Figure.ZERRO;
+        var figure = Figure.X;
         var stringsV0 = new String[]{"aa", "ab", "ac"};
         var stringsV1 = new String[]{"fd", "fe", "ff"};
         var stringsV2 = new String[]{"cd", "ce", "cf"};
-//        var arr = new String[][]{stringsV0, stringsV1, stringsV2};
-        var arr = new String[][]{stringsV2};
+        var arr = new String[][]{stringsV0, stringsV1, stringsV2};
 
         for (var line : arr) {
             var board = new Board(6);
@@ -48,7 +47,7 @@ class Test {
 
     @org.junit.jupiter.api.Test
     void testBoardWinDiagonal() {
-        var figure = Figure.ZERRO;
+        var figure = Figure.X;
         var stringsV0 = new String[]{"aa", "bb", "cc"};
         var stringsV1 = new String[]{"dd", "ee", "ff"};
         var stringsV2 = new String[]{"af", "be", "cd"};

@@ -8,7 +8,7 @@ import com.company.view.ConsoleReader;
 
 public class TicTacToe {
     public static void main(String[] args) {
-        Player[] players = new Player[] {new Player(Figure.ZERRO), new Player(Figure.ZERO), new Player(Figure.SHARP)};
+        Player[] players = new Player[] {new Player(Figure.X), new Player(Figure.ZERO), new Player(Figure.SHARP)};
         Board board = new Board(6);
         ConsolePrinter printer =  new ConsolePrinter();
         ConsoleReader reader = new ConsoleReader();
